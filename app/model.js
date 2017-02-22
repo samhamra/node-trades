@@ -2,9 +2,8 @@
 "use strict";
 
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('nodelabben', 'root', 'Demodras1992', {
-  host: 'localhost',
-  port: 3306,
+var sequelize = new Sequelize('shamra', 'shamra_admin', 'rOVAeCpn', {
+  host: 'mysql-vt2016.csc.kth.se',
   pool: {
     max: 5,
     min: 0,
