@@ -1,0 +1,26 @@
+<div class="container">
+	<h1>List trades</h1>
+	<div class="panel">
+		<label>Name:
+			<select class="form-control" ng-change="getTrades(selectedSecurity, '{{selectedSecurity}}')" ng-model="selectedSecurity" ng-options="security for security in availableSecurities"></select>
+		</label>
+	</div>
+	<div class="sidebar">
+		<table>
+		<tr>
+			<th>Security</th>
+			<th>Amount</th>
+			<th>Price</th>
+			<th>Buyer</th>
+			<th>Seller</th>
+		</tr>
+		<tr ng-repeat="row in trades">
+			<td>{{ row.security }}</td>
+			<td>{{ row.amount }}</td>
+			<td>{{ row.price }}</td>
+			<td>{{ row.buyer }}</td>
+			<td>{{ row.seller }}</td>
+		</tr>
+	</table>
+</div>
+</div>

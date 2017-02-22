@@ -1,0 +1,24 @@
+<div class="container">
+	<h1>Create new order</h1>
+	<div class="panel">
+		<form name="orderForm">
+			<div class="form-group">
+				<label>Security:
+					<select ng-model="selectedSecurity" ng-options="security for security in availableSecurities"></select>
+				</label>
+				<label>Type:
+					<select ng-init="type = types[0]" ng-model="type" ng-options="type for type in types">
+					</select>
+				</label>
+				<label>Price:
+					<input type="number" ng-model="price" min="1">
+				</label>
+				<label>Amount:
+					<input type="number" ng-model="amount" min="1">
+				</label>
+				<br>
+				<input type="submit" ng-click="createOrder()" value="Create" />
+			</div>
+		</form>
+	</div>
+</div>
