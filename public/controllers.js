@@ -65,6 +65,7 @@ function($scope, http, user) {
   $scope.selectedSecurity;
   $scope.previousRoom;
   $scope.trades;
+  $scope.orders;
   var socket = io().connect();
   socket.on('connect', function(){
     console.log("connected to socket")
@@ -77,20 +78,25 @@ function($scope, http, user) {
     console.log("previous: " + previousSecurity);
     console.log("current: " + selectedSecurity)
     http.get("/trades/"+selectedSecurity, function(result) {
-      console.log(result.data.trades);
       $scope.trades = result.data.trades;
+      $scope.orders = result.data.orders;
       socket.emit("join", {security: $scope.selectedSecurity, previous: previousSecurity, username:user.getName()});
     });
   }
   socket.on('update', function(data) {
-    console.log("update");
-    console.log(data);
-    data.forEach(function(object) {
+    console.log("updated trades");
+    console.log(data.trades);
+    data.trades.forEach(function(object) {
       $scope.$apply(function(){
         $scope.trades.push(object);
       })
     })
-    console.log($scope.trades);
+    http.get("/orders/" + $scope.selectedSecurity, function(result) {
+      console.log("updated orders");
+      console.log(result.data);
+      console.log(result.data.orders);
+      $scope.orders = result.data.orders;
+    });
   })
 
 }
@@ -137,11 +143,11 @@ function($scope, http, user) {
     } else {
       var data = {security: $scope.selectedSecurity, type: $scope.type, price: $scope.price, amount: $scope.amount, uid: user.getName()};
       http.post("/orders", data, function(response) {
-        console.log(response.data);
-        if(response.data.length !== 0) {
-          console.log("emit update");
-          socket.emit('update', {security: response.data[0].security, data: response.data });
-        }
+        console.log(response.data.trades);
+        console.log(response.data.orders);
+        console.log("emit update");
+        socket.emit('update', {security: data.security, trades: response.data.trades, orders: response.data.orders});
+
       })
     }
   }

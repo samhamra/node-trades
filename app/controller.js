@@ -15,6 +15,7 @@ router.get('/roomlist', function (req, res) {
 });
 
 router.get('/securities', function(req, res) {
+
   model.getSecurities(function(result) {
     res.json({list: result})
   })
@@ -28,13 +29,22 @@ router.post('/securities', function(req, res) {
 
 router.post('/orders', function(req, res) {
   model.matchOrder(req.body, function(result) {
+    console.log("hejsan");
+    console.log(result);
     res.json(result);
   })
 });
 
+router.get('/orders/:security', function(req, res) {
+  model.getOrders(req.params.security, function(result) {
+    res.json({orders: result})
+  })
+});
+
+
 router.get('/trades/:security', function(req, res) {
   model.getTrades(req.params.security, function(result) {
-    res.json({trades: result})
+    res.json({trades: result.trades, orders: result.orders})
 
   });
 });

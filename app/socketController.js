@@ -19,7 +19,8 @@ module.exports = function (socket, io) {
   // user gets updated
   socket.on('update', function (req) {
     console.log("update to " + req.security);
-    io.to(req.security).emit('update', req.data);
+    var data = {trades: req.trades, orders: req.orders}
+    io.to(req.security).emit('update', data);
   });
 
 

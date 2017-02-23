@@ -58,6 +58,7 @@ var sequelize = new Sequelize('shamra', 'shamra_admin', 'rOVAeCpn', {
   var roomList = [];
 
   exports.getTrades = function(security, callback) {
+    var resultSet;
     var trades = [];
     Trades.findAll(
       {attributes: ['security', 'price', 'amount', 'buyer', 'seller', 'createdAt' ],
@@ -67,7 +68,12 @@ var sequelize = new Sequelize('shamra', 'shamra_admin', 'rOVAeCpn', {
         trades.push({security: row.get('security'), price: row.get('price'), amount: row.get('amount'), buyer: row.get('buyer'), seller: row.get('seller'), createdAt: row.get('createdAt')});
       })
       console.log("Trades sent");
-      callback(trades);
+      getOrders(security, function(orders) {
+        resultSet = {trades: trades, orders: orders }
+            callback(resultSet);
+
+      })
+
     });
   }
   exports.getSecurities = function(callback) {
@@ -141,10 +147,37 @@ var sequelize = new Sequelize('shamra', 'shamra_admin', 'rOVAeCpn', {
       } else {
         console.log("Full buy matched and performed")
       }
-      callback(resultList);
+      var orderss = [];
+      var fullResults;
+      getOrders(data.security, function(orders) {
+        orderss = orders;
+        console.log("orders")
+        console.log(orders);
+        console.log("trades");
+        console.log(resultList);
+        fullResults = {trades : resultList, orders: orders}
+        callback(fullResults)
+      });
     })
   }
 
+
+  var getOrders = exports.getOrders = function(security, callback) {
+    var orders = [];
+    Orders.findAll(
+      {
+      where: {name: security}
+    }
+    ).then(function(result) {
+      result.forEach(function(row) {
+        orders.push({security: row.get('name'), price: row.get('price'), amount: row.get('amount'), uid: row.get('uid'), type: row.get('type')});
+      })
+      console.log("Orders sent");
+      console.log(orders)
+      callback(orders);
+
+    });
+  }
   function createOrder(data) {
     console.log("Order created");
     Orders.create({
@@ -172,6 +205,8 @@ var sequelize = new Sequelize('shamra', 'shamra_admin', 'rOVAeCpn', {
         }
       });
     }
+
+
     function createTrade(security, price, amount, buyer, seller) {
       console.log("Trade created");
       Trades.create({

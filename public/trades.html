@@ -22,5 +22,22 @@
 			<td>{{ row.seller }}</td>
 		</tr>
 	</table>
+  <div class="sidebar">
+		<table>
+		<tr>
+			<th>Security</th>
+			<th>Amount</th>
+			<th>Price</th>
+			<th>uid</th>
+			<th>Type</th>
+		</tr>
+		<tr ng-repeat="row in orders">
+			<td>{{ row.name }}</td>
+			<td>{{ row.amount }}</td>
+			<td>{{ row.price }}</td>
+			<td>{{ row.uid }}</td>
+			<td>{{ row.type }}</td>
+		</tr>
+	</table>
 </div>
 </div>
